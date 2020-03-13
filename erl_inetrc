@@ -1,0 +1,18 @@
+%% Test with :ets.lookup(:inet_db, :cache_refresh_interval)
+%% export ERL_INETRC=./erl_inetrc
+
+%% -- ERLANG INET CONFIGURATION FILE --
+%% Doc: http://erlang.org/doc/apps/erts/inet_cfg.html
+%% on Openshift by default the DNS resolution of a service is ALWAYS the service global IP
+%% The connection is routed to the local pod ip by IPTABLES on socket opening and is transparent to the application.
+%% Conclusion DNS cache is important not to overload the server to resolve static service ips
+%% Cache settings only applies if using :dns lookup, values are [native, files, dns]
+{lookup, [file, dns, native]}.
+%% Nb of entries in the DNS cache. Disable caching by setting 0. Default 100.
+{cache_size, 1000}.
+%% Time entries are in cache. Default 1h
+{cache_refresh, 36000000}.
+%% Lookup timeout in ms before retry. Default to 2 sec. Longer to avoid hammering the DNS server
+{timeout, 4010}.
+%% Lookup retries. Default to 3.
+{retry, 3}.

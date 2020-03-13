@@ -25,3 +25,5 @@ line_bot-*.tar
 /.elixir_ls
 
 .mix_tasks
+
+.env

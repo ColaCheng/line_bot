@@ -17,6 +17,7 @@ defmodule LineBot.CowboyServer do
         }
       ])
 
-    {:ok, _} = :cowboy.start_clear(:http, [port: 8080], %{env: %{dispatch: dispatch}})
+    port = Application.fetch_env!(:line_bot, :port)
+    {:ok, _} = :cowboy.start_clear(:http, [port: port], %{env: %{dispatch: dispatch}})
   end
 end
