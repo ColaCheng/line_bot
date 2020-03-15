@@ -1,4 +1,5 @@
 defmodule LineBot.Handler.Example do
+  require Logger
   alias LineBot.Handler.Utils, as: HUtils
 
   def init(req_in, opts) do
@@ -43,6 +44,7 @@ defmodule LineBot.Handler.Example do
   defp process_request(%{method: method}) do
     case method do
       "GET" ->
+        Logger.info("Hello World!")
         {:ok, %{message: "Hello World!"}}
 
       "POST" ->

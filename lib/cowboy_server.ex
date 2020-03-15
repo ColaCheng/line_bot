@@ -18,6 +18,28 @@ defmodule LineBot.CowboyServer do
       ])
 
     port = Application.fetch_env!(:line_bot, :port)
-    {:ok, _} = :cowboy.start_clear(:http, [port: port], %{env: %{dispatch: dispatch}})
+    ssl? = Application.fetch_env!(:line_bot, :ssl)
+    cacertfile = Application.fetch_env!(:line_bot, :cacertfile)
+    certfile = Application.fetch_env!(:line_bot, :certfile)
+    keyfile = Application.fetch_env!(:line_bot, :keyfile)
+    protocol_opts = %{env: %{dispatch: dispatch}}
+
+    case ssl? do
+      true ->
+        {:ok, _} =
+          :cowboy.start_tls(
+            :https,
+            [
+              port: port,
+              cacertfile: cacertfile,
+              certfile: certfile,
+              keyfile: keyfile
+            ],
+            protocol_opts
+          )
+
+      false ->
+        {:ok, _} = :cowboy.start_clear(:http, [port: port], protocol_opts)
+    end
   end
 end
