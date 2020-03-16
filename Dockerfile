@@ -15,6 +15,7 @@ RUN apk --update upgrade && \
     apk add --update --no-cache --virtual build-dependencies build-base && \
     apk add --update --no-cache curl wget openssh-client grep
 
+RUN mkdir -p /opt/certs
 RUN mkdir -p /opt/${SERVICE}/log
 
 COPY mix.exs mix.lock ./
