@@ -17,7 +17,7 @@ defmodule LineBot.InternalServer do
         }
       ])
 
-    transport_opts = %{port: 4001, max_connections: 16_384, num_acceptors: 10}
+    transport_opts = %{socket_opts: [port: 4001], max_connections: 16_384, num_acceptors: 100}
     protocol_opts = %{env: %{dispatch: dispatch}}
     {:ok, _} = :cowboy.start_clear(:internal_http, transport_opts, protocol_opts)
   end
