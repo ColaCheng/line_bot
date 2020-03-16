@@ -12,7 +12,8 @@ defmodule LineBot.CowboyServer do
         {
           :_,
           [
-            {"/", LineBot.Handler.Example, []}
+            {"/", LineBot.Handler.Example, []},
+            {"/line/webhook", LineBot.Handler.Line, []}
           ]
         }
       ])
