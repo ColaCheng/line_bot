@@ -1,6 +1,7 @@
 FROM elixir:1.10.2-alpine
 
 EXPOSE 4000
+EXPOSE 4001
 ENV PORT=4000 \
     MIX_ENV=prod \
     HOME=/opt/app \
