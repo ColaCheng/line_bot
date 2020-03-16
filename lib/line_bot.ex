@@ -8,6 +8,7 @@ defmodule LineBot do
 
   def start(_type, _args) do
     children = [
+      worker(LineBot.InternalServer, []),
       worker(LineBot.CowboyServer, [])
     ]
 
