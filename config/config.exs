@@ -10,4 +10,7 @@ config :line_bot,
   certfile: System.get_env("CERTFILE", ""),
   keyfile: System.get_env("KEYFILE", "")
 
+config :line_bot,
+  access_token: System.get_env("LINE_ACCESS_TOKEN", "")
+
 import_config "#{Mix.env()}.exs"
