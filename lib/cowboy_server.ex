@@ -22,6 +22,7 @@ defmodule LineBot.CowboyServer do
     cacertfile = Application.fetch_env!(:line_bot, :cacertfile)
     certfile = Application.fetch_env!(:line_bot, :certfile)
     keyfile = Application.fetch_env!(:line_bot, :keyfile)
+    transport_opts = %{port: port, max_connections: 16_384, num_acceptors: 100}
     protocol_opts = %{env: %{dispatch: dispatch}}
 
     case ssl? do
@@ -29,17 +30,16 @@ defmodule LineBot.CowboyServer do
         {:ok, _} =
           :cowboy.start_tls(
             :https,
-            [
-              port: port,
+            %{
               cacertfile: cacertfile,
               certfile: certfile,
               keyfile: keyfile
-            ],
+            } |> Map.merge(transport_opts),
             protocol_opts
           )
 
       false ->
-        {:ok, _} = :cowboy.start_clear(:http, [port: port], protocol_opts)
+        {:ok, _} = :cowboy.start_clear(:http, transport_opts, protocol_opts)
     end
   end
 end
