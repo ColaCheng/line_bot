@@ -59,13 +59,15 @@ defmodule LineBot.Handler.Line do
   end
 
   @line_reply_url "https://api.line.me/v2/bot/message/reply"
-  @headers [{"Content-Type", "application/json; charset=utf-8"}, {"Authorization", "Bearer #{Application.fetch_env!(:line_bot, :access_token)}"}]
+  @headers [{"Content-Type", "application/json"}]
   defp parse_line_events([]), do: :ok
   defp parse_line_events([%{"type" => "message", "replyToken" => reply_token, "message" => %{"text" => input_txt, "type" => "text"}} | tail]) do
     reply_body = %{replyToken: reply_token, messages: [%{type: "text", text: input_txt}]} |> :jiffy.encode()
-    Logger.info("headers: #{inspect @headers}")
+
     Logger.info("reply_body: #{inspect reply_body}")
-    case :hackney.request(:post, @line_reply_url, @headers, reply_body, []) do
+    headers = [{"Authorization", "Bearer #{Application.fetch_env!(:line_bot, :access_token)}"} | @headers]
+    Logger.info("headers: #{inspect headers}")
+    case :hackney.request(:post, @line_reply_url, headers, reply_body, []) do
       {:ok, 200, _} ->
         parse_line_events(tail)
 
