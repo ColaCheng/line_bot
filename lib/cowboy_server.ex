@@ -1,12 +1,17 @@
 defmodule LineBot.CowboyServer do
   use GenServer
 
+  @mongo_server :mongo
+  @short_url_coll "shortUrl"
+
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   @impl true
   def init(_) do
+    init_indexes()
+
     dispatch =
       :cowboy_router.compile([
         {
@@ -41,5 +46,16 @@ defmodule LineBot.CowboyServer do
       false ->
         {:ok, _} = :cowboy.start_clear(:http, transport_opts, protocol_opts)
     end
+  end
+
+  defp init_indexes() do
+    Mongo.create_indexes(
+      @mongo_server,
+      @short_url_coll,
+      [
+        [{"key", [{"hash_id", 1}]}, {"name", "hash_id"}]
+      ],
+      [{"unique", 1}]
+    )
   end
 end

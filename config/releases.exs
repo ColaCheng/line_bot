@@ -8,4 +8,5 @@ config :line_bot,
   keyfile: System.get_env("KEYFILE", "/opt/certs/privkey.pem")
 
 config :line_bot,
-  access_token: System.get_env("LINE_ACCESS_TOKEN", "")
+  access_token: System.get_env("LINE_ACCESS_TOKEN", ""),
+  mongodb_url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/test")

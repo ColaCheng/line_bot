@@ -3,17 +3,32 @@ defmodule LineBot.Context.ShortUrl do
   alias LineBot.Utils
 
   @hash_id_size 8
+  @mongo_server :mongo
+  @collection "shortUrl"
 
   def get(hash_id) when byte_size(hash_id) === 8 do
-    {:ok, "https://google.com"}
+    case Mongo.find_one(@mongo_server, @collection, %{hash_id: hash_id}, []) do
+      %{"url" => url} -> {:ok, url}
+      _ -> {:error, :notfound}
+    end
   end
 
   def get(_) do
     {:error, :invalid}
   end
 
-  def create(_url) do
+  def create(url) do
     <<hash_id::binary-size(@hash_id_size), _::binary>> = Utils.unique_id_62()
-    hash_id
+
+    case Mongo.insert_one(@mongo_server, @collection, %{hash_id: hash_id, url: url}) do
+      {:ok, _} ->
+        {:ok, hash_id}
+
+      {:error, %Mongo.WriteError{write_errors: [%{"code" => 11000}]}} ->
+        {:error, :duplicate}
+
+      error ->
+        error
+    end
   end
 end

@@ -11,6 +11,7 @@ config :line_bot,
   keyfile: System.get_env("KEYFILE", "")
 
 config :line_bot,
-  access_token: System.get_env("LINE_ACCESS_TOKEN", "")
+  access_token: System.get_env("LINE_ACCESS_TOKEN", ""),
+  mongodb_url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/test")
 
 import_config "#{Mix.env()}.exs"

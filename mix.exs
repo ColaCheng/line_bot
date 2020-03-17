@@ -25,7 +25,8 @@ defmodule LineBot.MixProject do
     [
       {:cowboy, "~> 2.7.0"},
       {:jiffy, "~> 1.0"},
-      {:ex_trends, "~> 0.1.0"}
+      {:ex_trends, "~> 0.1.0"},
+      {:mongodb_driver, "~> 0.6"}
     ]
   end
 end
