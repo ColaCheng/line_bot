@@ -2,6 +2,7 @@ defmodule LineBot.Handler.Line do
   require Logger
   alias LineBot.Handler.Utils, as: HUtils
   alias LineBot.Context.LineMessage
+  alias LineBot.Context.GoogleDailyTrends
 
   def init(req_in, opts) do
     request = %{
@@ -62,11 +63,11 @@ defmodule LineBot.Handler.Line do
          %{
            "type" => "message",
            "replyToken" => reply_token,
-           "message" => %{"text" => input_txt, "type" => "text"}
+           "message" => %{"text" => <<"今", _::binary>>, "type" => "text"}
          }
          | tail
        ]) do
-    LineMessage.reply(reply_token, [input_txt])
+    LineMessage.reply(reply_token, [GoogleDailyTrends.get("TW")])
     process_line_events(tail)
   end
 
