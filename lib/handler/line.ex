@@ -63,16 +63,30 @@ defmodule LineBot.Handler.Line do
          %{
            "type" => "message",
            "replyToken" => reply_token,
-           "message" => %{"text" => <<"今", _::binary>>, "type" => "text"}
+           "message" => %{"text" => input, "type" => "text"}
          }
          | tail
        ]) do
-    LineMessage.reply(reply_token, [GoogleDailyTrends.get("TW")])
+    texts =
+      case parse_keyword(input) do
+        {m, f, a} -> [apply(m, f, a)]
+        nil -> []
+      end
+
+    LineMessage.reply(reply_token, texts)
     process_line_events(tail)
   end
 
   defp process_line_events([_ | tail]) do
     process_line_events(tail)
+  end
+
+  defp parse_keyword(input) when input in ["台灣", "臺灣"] do
+    {GoogleDailyTrends, :get, ["TW"]}
+  end
+
+  defp parse_keyword(_input) do
+    nil
   end
 
   defp make_response({:ok, result}), do: {200, result}
