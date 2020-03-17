@@ -7,7 +7,7 @@ defmodule LineBot.Handler.Redirect do
   def init(req_in, opts) do
     request = %{
       method: :cowboy_req.method(req_in),
-      hash: :cowboy_req.binding(:hash, req_in)
+      hash_id: :cowboy_req.binding(:hash_id, req_in)
     }
 
     case process_request(request) |> make_response() do
@@ -34,10 +34,10 @@ defmodule LineBot.Handler.Redirect do
     end
   end
 
-  defp process_request(%{method: method, hash: hash}) do
+  defp process_request(%{method: method, hash_id: hash_id}) do
     case method do
       "GET" ->
-        get_redirect_url(hash)
+        get_redirect_url(hash_id)
 
       _ ->
         :method_not_allowed
