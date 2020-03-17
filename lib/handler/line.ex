@@ -10,6 +10,8 @@ defmodule LineBot.Handler.Line do
       data: %{}
     }
 
+    Logger.info("request headers: #{inspect(:cowboy_req.headers(req_in))}")
+
     {result, req_done} =
       case :cowboy_req.has_body(req_in) do
         true ->
@@ -77,7 +79,8 @@ defmodule LineBot.Handler.Line do
     process_line_events(tail)
   end
 
-  defp process_line_events([_ | tail]) do
+  defp process_line_events([event | tail]) do
+    Logger.info("Unknown event: #{inspect(event)}")
     process_line_events(tail)
   end
 
