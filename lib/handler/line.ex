@@ -10,7 +10,13 @@ defmodule LineBot.Handler.Line do
       data: %{}
     }
 
-    Logger.info("request headers: #{inspect(:cowboy_req.headers(req_in))}")
+    case Map.get(req_in, :proxy_header, nil) do
+      %{} = proxy_info ->
+        Logger.info("proxy_info: #{inspect(proxy_info)}")
+
+      nil ->
+        nil
+    end
 
     {result, req_done} =
       case :cowboy_req.has_body(req_in) do

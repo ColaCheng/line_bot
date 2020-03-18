@@ -10,7 +10,13 @@ defmodule LineBot.Handler.Redirect do
       hash_id: :cowboy_req.binding(:hash_id, req_in)
     }
 
-    Logger.info("request headers: #{inspect(:cowboy_req.headers(req_in))}")
+    case Map.get(req_in, :proxy_header, nil) do
+      %{} = proxy_info ->
+        Logger.info("proxy_info: #{inspect(proxy_info)}")
+
+      nil ->
+        nil
+    end
 
     case process_request(request) |> make_response() do
       {301, url} ->
