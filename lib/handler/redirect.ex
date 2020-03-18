@@ -10,6 +10,8 @@ defmodule LineBot.Handler.Redirect do
       hash_id: :cowboy_req.binding(:hash_id, req_in)
     }
 
+    Logger.info("request headers: #{inspect(:cowboy_req.headers(req_in))}")
+
     case process_request(request) |> make_response() do
       {301, url} ->
         {:ok,
