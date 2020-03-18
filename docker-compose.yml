@@ -1,10 +1,22 @@
-version: "2.0"
+version: "2.2"
 services:
   line_bot:
     build: .
+    restart: unless-stopped
     ports:
-    - "4000:4000"
-    - "4001:4001"
+      - "4000:4000"
+      - "4001:4001"
     volumes:
-    - "~/certs:/opt/certs"
+      - "~/certs:/opt/certs:ro"
     env_file: .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+  mongodb:
+    image: "mongo:4.2"
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "27017:27017"
+    volumes:
+      - "~/db:/data/db"
