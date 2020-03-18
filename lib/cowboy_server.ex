@@ -28,9 +28,10 @@ defmodule LineBot.CowboyServer do
     cacertfile = Application.fetch_env!(:line_bot, :cacertfile)
     certfile = Application.fetch_env!(:line_bot, :certfile)
     keyfile = Application.fetch_env!(:line_bot, :keyfile)
+    proxy_header? = Application.fetch_env!(:line_bot, :proxy_header)
     socket_opts = [port: port]
     transport_opts = %{socket_opts: socket_opts, max_connections: 16_384, num_acceptors: 100}
-    protocol_opts = %{env: %{dispatch: dispatch}}
+    protocol_opts = %{env: %{dispatch: dispatch}, proxy_header: proxy_header?}
 
     case ssl? do
       true ->
