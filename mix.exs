@@ -10,7 +10,7 @@ defmodule LineBot.MixProject do
       build_embedded: Mix.env() == :prod,
       deps: deps(),
       releases: [
-        prod: [
+        line_bot: [
           steps: [:assemble, :tar]
         ]
       ]
