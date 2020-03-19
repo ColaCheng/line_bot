@@ -1,0 +1,1 @@
+docker run -v $(pwd):/opt/build --rm -it elixir-ubuntu:latest /opt/build/bin/build

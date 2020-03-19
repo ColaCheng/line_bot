@@ -1,0 +1,1 @@
+docker build -f Dockerfile_build -t elixir-ubuntu:latest .

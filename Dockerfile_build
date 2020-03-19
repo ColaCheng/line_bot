@@ -1,0 +1,44 @@
+FROM ubuntu:18.04
+
+ENV REFRESHED_AT=2020-03-19 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    HOME=/opt/app \
+    TERM=xterm \
+    ASDF=v0.7.7
+
+WORKDIR ${HOME}
+
+RUN \
+  apt-get update -y && \
+  apt-get -y install build-essential autoconf m4 libncurses5-dev \
+  libwxgtk3.0-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev \
+  libssh-dev unixodbc-dev xsltproc fop \
+  cmake g++ libtool \
+  libuv-dev \
+  openssl git wget vim apt-utils curl locales && \
+  locale-gen en_US.UTF-8
+
+COPY .tool-versions ${HOME}
+ENV PATH="${PATH}:${HOME}/.asdf/shims:${HOME}/.asdf/bin"
+
+
+RUN \
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF} && \
+  echo '. $HOME/.asdf/asdf.sh' >> $HOME/.bashrc && \
+  echo '. $HOME/.asdf/asdf.sh' >> $HOME/.profile && \
+  echo '. $HOME/.asdf/completions/asdf.bash' >> $HOME/.bashrc && \
+  echo '. $HOME/.asdf/completions/asdf.bash' >> $HOME/.profile
+
+RUN \
+  asdf plugin add erlang && \
+  asdf plugin add elixir
+
+RUN \
+  cd ${HOME} && \
+  asdf install
+
+RUN asdf install
+
+CMD ["/bin/bash"]
