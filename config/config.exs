@@ -14,6 +14,6 @@ config :line_bot,
 
 config :line_bot,
   access_token: System.get_env("LINE_ACCESS_TOKEN", ""),
-  mongodb_url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/test?MaxPoolSize=5")
+  mongodb_url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/test?MaxPoolSize=10")
 
 import_config "#{Mix.env()}.exs"

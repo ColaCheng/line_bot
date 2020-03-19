@@ -44,7 +44,7 @@ defmodule LineBot.Handler.Example do
   defp process_request(%{method: method}) do
     case method do
       "GET" ->
-        Logger.info("Hello World!")
+        # Logger.info("Hello World!")
         {:ok, %{message: "Hello World!"}}
 
       "POST" ->
