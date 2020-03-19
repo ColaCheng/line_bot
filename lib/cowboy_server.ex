@@ -17,8 +17,8 @@ defmodule LineBot.CowboyServer do
         {
           :_,
           [
-            {"/healthcheck", LineBot.Handler.Example, []},
             {"/:hash_id", LineBot.Handler.Redirect, []},
+            {"/test/healthcheck", LineBot.Handler.Example, []},
             {"/line/webhook", LineBot.Handler.Line, []}
           ]
         }

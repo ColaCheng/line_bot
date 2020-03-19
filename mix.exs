@@ -8,7 +8,12 @@ defmodule LineBot.MixProject do
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: [
+        prod: [
+          steps: [:assemble, :tar]
+        ]
+      ]
     ]
   end
 
