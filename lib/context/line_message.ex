@@ -1,5 +1,6 @@
 defmodule LineBot.Context.LineMessage do
   require Logger
+  alias LineBot.Request
 
   @line_reply_url "https://api.line.me/v2/bot/message/reply"
   @headers [{"Content-Type", "application/json"}]
@@ -13,19 +14,12 @@ defmodule LineBot.Context.LineMessage do
       {"Authorization", "Bearer #{Application.fetch_env!(:line_bot, :access_token)}"} | @headers
     ]
 
-    case :hackney.request(:post, @line_reply_url, headers, reply_body, []) do
-      {:ok, 200, _} ->
+    case Request.request(:post, @line_reply_url, reply_body, headers, []) do
+      {:ok, %{status_code: 200}} ->
         :ok
 
-      {:ok, 200, _, _} ->
-        :ok
-
-      {:ok, status, headers, ref} ->
-        Logger.info(
-          "Reply to Line error, status: #{inspect(status)}, headers: #{inspect(headers)}, body: #{
-            inspect(:hackney.body(ref))
-          }"
-        )
+      {:ok, response} ->
+        Logger.info("Reply to Line error, response: #{inspect(response)}}")
 
         :error
 
