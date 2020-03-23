@@ -122,7 +122,7 @@ defmodule LineBot.Handler.Line do
     [%{"type" => "text", "text" => trends}]
   end
 
-  defp parse_keyword("口罩哪裡買") do
+  defp parse_keyword("找口罩") do
     action = %{
       "type" => "location",
       "label" => "GPS搜尋（請點中間地址）"
