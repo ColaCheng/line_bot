@@ -10,7 +10,8 @@ defmodule LineBot do
     children = [
       worker(Mongo, [[name: :mongo, url: mongodb_url]]),
       worker(LineBot.InternalServer, []),
-      worker(LineBot.CowboyServer, [])
+      worker(LineBot.CowboyServer, []),
+      worker(LineBot.PharmaciesCache, [[]])
     ]
 
     opts = [strategy: :one_for_one, name: LineBot.Supervisor]
