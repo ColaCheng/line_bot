@@ -5,7 +5,7 @@ defmodule LineBot.Context.Pharmacies do
   def find_near_pharmacies(point) do
     case PharmaciesCache.get() do
       {:ok, pharmacies} ->
-        for %{"geometry" => %{"coordinates" => [p_lat, p_long]}} = pharmacy <- pharmacies do
+        for %{"geometry" => %{"coordinates" => [p_long, p_lat]}} = pharmacy <- pharmacies do
           Map.put(pharmacy, "distance", haversine(point, {p_lat, p_long}))
         end
         |> Enum.sort(&(Map.get(&1, "distance") <= Map.get(&2, "distance")))

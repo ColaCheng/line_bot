@@ -3,6 +3,7 @@ defmodule LineBot.Handler.Line do
   alias LineBot.Handler.Utils, as: HUtils
   alias LineBot.Context.LineMessage
   alias LineBot.Context.GoogleDailyTrends
+  alias LineBot.Context.Pharmacies
 
   def init(req_in, opts) do
     request = %{
@@ -81,6 +82,36 @@ defmodule LineBot.Handler.Line do
     process_line_events(tail)
   end
 
+  defp process_line_events([
+         %{
+           "type" => "message",
+           "replyToken" => reply_token,
+           "message" => %{"type" => "location", "latitude" => lat, "longitude" => long}
+         }
+         | tail
+       ]) do
+    for %{
+          "geometry" => %{"coordinates" => [p_long, p_lat]},
+          "properties" => %{
+            "name" => name,
+            "address" => address,
+            "mask_adult" => mask_adult,
+            "mask_child" => mask_child
+          }
+        } <- Pharmacies.find_near_pharmacies({lat, long}) do
+      %{
+        "type" => "location",
+        "title" => name <> "\n成： #{mask_adult}，兒：#{mask_child}",
+        "address" => address,
+        "latitude" => p_lat,
+        "longitude" => p_long
+      }
+    end
+    |> LineMessage.reply(reply_token)
+
+    process_line_events(tail)
+  end
+
   defp process_line_events([event | tail]) do
     Logger.info("Unknown event: #{inspect(event)}")
     process_line_events(tail)
@@ -94,17 +125,17 @@ defmodule LineBot.Handler.Line do
   defp parse_keyword("口罩哪裡買") do
     action = %{
       "type" => "location",
-      "label" => "Location"
+      "label" => "GPS搜尋（請點中間地址）"
     }
 
     [
       %{
         "type" => "template",
-        "altText" => "This is a buttons template",
+        "altText" => "想找附近特約藥局買口罩嗎？",
         "template" => %{
           "type" => "buttons",
-          "title" => "My title",
-          "text" => "Some text",
+          "title" => "想找附近特約藥局買口罩嗎？",
+          "text" => "請把口罩留給需要的人",
           "defaultAction" => action,
           "actions" => [action]
         }
