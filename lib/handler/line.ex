@@ -75,13 +75,9 @@ defmodule LineBot.Handler.Line do
          }
          | tail
        ]) do
-    texts =
-      case parse_keyword(input) do
-        {m, f, a} -> [apply(m, f, a)]
-        nil -> []
-      end
+    parse_keyword(input)
+    |> LineMessage.reply(reply_token)
 
-    LineMessage.reply(reply_token, texts)
     process_line_events(tail)
   end
 
@@ -91,11 +87,33 @@ defmodule LineBot.Handler.Line do
   end
 
   defp parse_keyword(input) when input in ["台灣", "臺灣"] do
-    {GoogleDailyTrends, :get, ["TW"]}
+    trends = GoogleDailyTrends.get("TW")
+    [%{"type" => "text", "text" => trends}]
+  end
+
+  defp parse_keyword("口罩哪裡買") do
+    action = %{
+      "type" => "location",
+      "label" => "Location"
+    }
+
+    [
+      %{
+        "type" => "template",
+        "altText" => "This is a buttons template",
+        "template" => %{
+          "type" => "buttons",
+          "title" => "My title",
+          "text" => "Some text",
+          "defaultAction" => action,
+          "actions" => [action]
+        }
+      }
+    ]
   end
 
   defp parse_keyword(_input) do
-    nil
+    []
   end
 
   defp make_response({:ok, result}), do: {200, result}

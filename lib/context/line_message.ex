@@ -4,10 +4,9 @@ defmodule LineBot.Context.LineMessage do
 
   @line_reply_url "https://api.line.me/v2/bot/message/reply"
   @headers [{"Content-Type", "application/json"}]
-  def reply(_, []), do: :ok
+  def reply([], _), do: :ok
 
-  def reply(reply_token, texts) do
-    messages = for text <- texts, do: %{type: "text", text: text}
+  def reply(messages, reply_token) do
     reply_body = %{replyToken: reply_token, messages: messages} |> :jiffy.encode()
 
     headers = [
