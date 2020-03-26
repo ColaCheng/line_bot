@@ -27,3 +27,5 @@ line_bot-*.tar
 .mix_tasks
 
 .env
+
+*.pem
