@@ -9,14 +9,14 @@ services:
     volumes:
       - "~/certs:/opt/certs:ro"
     env_file: .env
-    depends_on:
-      mongodb:
-        condition: service_healthy
-  mongodb:
-    image: "mongo:4.2"
-    healthcheck:
-      test: "exit 0"
-    ports:
-      - "27017:27017"
-    volumes:
-      - "~/db:/data/db"
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  # mongodb:
+  #   image: "mongo:4.2"
+  #   healthcheck:
+  #     test: "exit 0"
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - "~/db:/data/db"
