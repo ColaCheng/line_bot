@@ -38,7 +38,7 @@ set_git_config
 
 sudo docker rmi -f $(sudo docker images --filter "dangling=true" -q --no-trunc)
 cd /home/ubuntu/line_bot; git pull || exit 1
-cd /home/ubuntu/line_bot; sudo ./run.sh || exit 1
+cd /home/ubuntu/line_bot; sudo ./docker_compose_run.sh || exit 1
 
 wait_for_local_health
 reset_git_config
