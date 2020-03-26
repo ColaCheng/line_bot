@@ -128,6 +128,12 @@ defmodule LineBot.Handler.Line do
       "label" => "GPS搜尋（請點中間地址）"
     }
 
+    trends_action = %{
+      "type" => "message",
+      "label" => "台灣今天都在搜什麼",
+      "text" => "台灣"
+    }
+
     [
       %{
         "type" => "template",
@@ -137,7 +143,7 @@ defmodule LineBot.Handler.Line do
           "title" => "想找附近特約藥局買口罩嗎？",
           "text" => "請把口罩留給需要的人",
           "defaultAction" => action,
-          "actions" => [action]
+          "actions" => [action, trends_action]
         }
       }
     ]
