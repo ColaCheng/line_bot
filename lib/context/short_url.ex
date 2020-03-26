@@ -7,9 +7,22 @@ defmodule LineBot.Context.ShortUrl do
   @collection "shortUrl"
 
   def get(hash_id) when byte_size(hash_id) === 8 do
-    case Mongo.find_one(@mongo_server, @collection, %{hash_id: hash_id}, []) do
-      %{"url" => url} -> {:ok, url}
-      _ -> {:error, :notfound}
+    case Mongo.find_one_and_update(
+           @mongo_server,
+           @collection,
+           %{hash_id: hash_id},
+           %{"$inc" => %{"hit" => 1}},
+           []
+         ) do
+      {:ok, %{"url" => url}} ->
+        {:ok, url}
+
+      {:ok, nil} ->
+        {:error, :notfound}
+
+      error ->
+        Logger.error("Get shortUrl error: #{inspect(error)}")
+        {:error, :notfound}
     end
   end
 
