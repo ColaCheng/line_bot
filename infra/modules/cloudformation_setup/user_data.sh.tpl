@@ -36,12 +36,12 @@ aws secretsmanager get-secret-value --secret-id ${my_env}/test --version-stage A
 
 set_git_config
 
-sudo docker rmi -f $(sudo docker images --filter "dangling=true" -q --no-trunc)
+docker rmi -f $(docker images --filter "dangling=true" -q --no-trunc)
 cd /home/ubuntu/line_bot; git pull || exit 1
-cd /home/ubuntu/line_bot; sudo ./docker_compose_run.sh || exit 1
+cd /home/ubuntu/line_bot; ./docker_compose_run.sh || exit 1
 
 wait_for_local_health
 reset_git_config
 rm -rf /home/ubuntu/deployment
 
-sudo cfn-signal --stack "${stack_prefix}-stack" --resource WebASG --region $REGION
+cfn-signal --stack "${stack_prefix}-stack" --resource WebASG --region $REGION
