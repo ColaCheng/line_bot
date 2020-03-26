@@ -123,9 +123,15 @@ defmodule LineBot.Handler.Line do
   end
 
   defp parse_keyword("找口罩") do
-    action = %{
+    find_mask_action = %{
       "type" => "location",
       "label" => "GPS搜尋（請點中間地址）"
+    }
+
+    news_action = %{
+      "type" => "uri",
+      "label" => "看看最新疫情情報",
+      "uri" => "https://www.cdc.gov.tw/"
     }
 
     trends_action = %{
@@ -142,8 +148,8 @@ defmodule LineBot.Handler.Line do
           "type" => "buttons",
           "title" => "想找附近特約藥局買口罩嗎？",
           "text" => "請把口罩留給需要的人",
-          "defaultAction" => action,
-          "actions" => [action, trends_action]
+          "defaultAction" => find_mask_action,
+          "actions" => [find_mask_action, news_action, trends_action]
         }
       }
     ]
