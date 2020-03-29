@@ -6,62 +6,48 @@ defmodule LineBot.Context.GoogleDailyTrends do
 
   def get(geo) do
     case ExTrends.DailyTrends.request(geo) |> ExTrends.run() do
-      {:ok, [topic1, topic2, topic3 | _]} ->
+      {:ok, trends} ->
         base_url = Application.fetch_env!(:line_bot, :base_url)
 
-        %{
-          "title" => %{"query" => t1_query},
-          "articles" => [%{"title" => t1_title, "url" => t1_url} | _]
-        } = topic1
+        case get_top3_topics(trends, base_url, []) |> Enum.reverse() do
+          [_ | topics] ->
+            IO.iodata_to_binary([@default_title, topics])
 
-        %{
-          "title" => %{"query" => t2_query},
-          "articles" => [%{"title" => t2_title, "url" => t2_url} | _]
-        } = topic2
-
-        %{
-          "title" => %{"query" => t3_query},
-          "articles" => [%{"title" => t3_title, "url" => t3_url} | _]
-        } = topic3
-
-        [
-          @default_title,
-          [
-            "💡 ",
-            t1_query,
-            " 🔎\n",
-            "🗞️ ",
-            t1_title,
-            "\n",
-            make_short_url(t1_url, base_url)
-          ],
-          "\n\n",
-          [
-            "💡 ",
-            t2_query,
-            " 🔎\n",
-            "🗞️ ",
-            t2_title,
-            "\n",
-            make_short_url(t2_url, base_url)
-          ],
-          "\n\n",
-          [
-            "💡 ",
-            t3_query,
-            " 🔎\n",
-            "🗞️ ",
-            t3_title,
-            "\n",
-            make_short_url(t3_url, base_url)
-          ]
-        ]
-        |> IO.iodata_to_binary()
+          [] ->
+            IO.iodata_to_binary([@default_title, "現在似乎還沒有資料～"])
+        end
 
       {:error, reason} ->
         Logger.error("Google daily trends API error: #{inspect(reason)}")
         ""
     end
+  end
+
+  defp get_top3_topics([], _base_url, acc), do: acc
+  defp get_top3_topics(_, _base_url, [_, _, _] = acc), do: acc
+
+  defp get_top3_topics(
+         [
+           %{
+             "title" => %{"query" => query},
+             "articles" => [%{"title" => title, "url" => url} | _]
+           }
+           | tail
+         ],
+         base_url,
+         acc
+       ) do
+    topic_info = [
+      "💡 ",
+      query,
+      " 🔎\n",
+      "🗞️ ",
+      title,
+      "\n",
+      make_short_url(url, base_url)
+    ]
+
+    get_top3_topics(tail, base_url, [topic_info, "\n\n" | acc])
   end
 
   defp make_short_url(url, base_url) do
