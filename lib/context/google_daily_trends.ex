@@ -9,13 +9,13 @@ defmodule LineBot.Context.GoogleDailyTrends do
       {:ok, trends} ->
         base_url = Application.fetch_env!(:line_bot, :base_url)
 
-        case get_top3_topics(trends, base_url, []) |> Enum.reverse() do
-          [_ | topics] ->
-            IO.iodata_to_binary([@default_title, topics])
+        result =
+          case get_top3_topics(trends, base_url, []) |> Enum.reverse() do
+            [_ | topics] -> topics
+            [] -> "現在似乎還沒有資料～"
+          end
 
-          [] ->
-            IO.iodata_to_binary([@default_title, "現在似乎還沒有資料～"])
-        end
+        IO.iodata_to_binary([@default_title | result])
 
       {:error, reason} ->
         Logger.error("Google daily trends API error: #{inspect(reason)}")
