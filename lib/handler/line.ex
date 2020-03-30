@@ -147,7 +147,7 @@ defmodule LineBot.Handler.Line do
         "template" => %{
           "type" => "buttons",
           "title" => "想找附近特約藥局買口罩嗎？",
-          "text" => "請把口罩留給需要的人",
+          "text" => "前往藥局前麻煩請確認營業時間及購買須知，謝謝🙂",
           "defaultAction" => find_mask_action,
           "actions" => [find_mask_action, news_action, trends_action]
         }
