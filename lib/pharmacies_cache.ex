@@ -5,7 +5,7 @@ defmodule LineBot.PharmaciesCache do
 
   @ets_table :pharmacies
   @pharmacies_info_url "https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json"
-  @interval 10 * 60 * 1_000
+  @interval 5 * 60 * 1_000
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
