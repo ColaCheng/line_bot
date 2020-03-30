@@ -23,8 +23,8 @@ defmodule LineBot.Context.GoogleDailyTrends do
     end
   end
 
+  defp get_top3_topics(_, _base_url, [_, _, _, _, _, _] = acc), do: acc
   defp get_top3_topics([], _base_url, acc), do: acc
-  defp get_top3_topics(_, _base_url, [_, _, _] = acc), do: acc
 
   defp get_top3_topics(
          [
