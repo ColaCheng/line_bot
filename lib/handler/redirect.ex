@@ -56,10 +56,12 @@ defmodule LineBot.Handler.Redirect do
     case ShortUrl.get(hash) do
       {:ok, url} -> {:redirect, url}
       {:error, :notfound} -> :notfound
+      {:error, :invalid} -> :invalid
     end
   end
 
   defp make_response({:redirect, url}), do: {301, url}
   defp make_response(:notfound), do: {400, "Url notfound"}
+  defp make_response(:invalid), do: {400, "Url invalid"}
   defp make_response(:method_not_allowed), do: {405, "Method not allowed."}
 end
